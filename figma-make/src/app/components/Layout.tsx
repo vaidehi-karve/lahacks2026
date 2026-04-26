@@ -26,7 +26,7 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-background pr-[340px] sm:pr-[360px] lg:pr-[400px] xl:pr-[420px]">
-      <AnalyticsPanel sessionId={sessionId} />
+      <AnalyticsPanel sessionId={sessionId} userId={userId} />
       <header className="bg-secondary text-secondary-foreground shadow-sm">
         <div className="border-b border-white/10">
           <div className="max-w-7xl mx-auto px-6 py-3" data-section-id="header">

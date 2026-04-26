@@ -23,6 +23,16 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_events_session_ts ON events(sessionId, timestamp);
   CREATE INDEX IF NOT EXISTS idx_events_session_type ON events(sessionId, eventType);
+
+  CREATE TABLE IF NOT EXISTS submitted_sessions (
+    sessionId TEXT PRIMARY KEY,
+    userId TEXT NOT NULL,
+    taskId TEXT,
+    taskDone INTEGER NOT NULL DEFAULT 0,
+    submittedAt INTEGER NOT NULL,
+    metaJson TEXT
+  );
+  CREATE INDEX IF NOT EXISTS idx_submitted_sessions_submittedAt ON submitted_sessions(submittedAt);
 `);
 
 export function insertEvent(evt, payloadJson) {
@@ -50,4 +60,37 @@ export function getSessionEvents(sessionId) {
        ORDER BY timestamp ASC`
     )
     .all(sessionId);
+}
+
+export function submitSession({ sessionId, userId, taskId, taskDone, submittedAt, metaJson }) {
+  db.prepare(
+    `INSERT INTO submitted_sessions (sessionId, userId, taskId, taskDone, submittedAt, metaJson)
+     VALUES (?, ?, ?, ?, ?, ?)
+     ON CONFLICT(sessionId) DO UPDATE SET
+       taskId=excluded.taskId,
+       taskDone=excluded.taskDone,
+       submittedAt=excluded.submittedAt,
+       metaJson=excluded.metaJson`
+  ).run(sessionId, userId, taskId ?? null, taskDone ? 1 : 0, submittedAt, metaJson ?? null);
+}
+
+export function listSubmittedSessions({ limit = 50 } = {}) {
+  return db
+    .prepare(
+      `SELECT sessionId, userId, taskId, taskDone, submittedAt, metaJson
+       FROM submitted_sessions
+       ORDER BY submittedAt DESC
+       LIMIT ?`
+    )
+    .all(limit);
+}
+
+export function getSubmittedSession(sessionId) {
+  return db
+    .prepare(
+      `SELECT sessionId, userId, taskId, taskDone, submittedAt, metaJson
+       FROM submitted_sessions
+       WHERE sessionId = ?`
+    )
+    .get(sessionId);
 }
