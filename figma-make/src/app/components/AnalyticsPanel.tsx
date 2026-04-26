@@ -345,21 +345,6 @@ export function AnalyticsPanel({ sessionId, userId }: Props) {
                   </div>
 
                   <div className="rounded-lg border border-rose-200 bg-white p-3">
-                    <div className="text-sm font-semibold mb-2">Top clicked</div>
-                    <div className="space-y-1">
-                      {(pmOverview?.topClicked ?? []).slice(0, 10).map((t: any) => (
-                        <div key={t.element} className="flex items-center justify-between gap-3 text-xs">
-                          <span className="min-w-0 flex-1 break-words whitespace-normal">{t.element}</span>
-                          <span className="font-mono shrink-0">{t.clicks}</span>
-                        </div>
-                      ))}
-                      {!(pmOverview?.topClicked ?? []).length ? (
-                        <div className="text-xs text-muted-foreground">No submitted sessions yet.</div>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border border-rose-200 bg-white p-3">
                     <div className="text-sm font-semibold mb-2">AI recommendations</div>
                     {pmAi?.error ? (
                       <div className="text-xs text-red-600 break-words whitespace-pre-wrap">{pmAi.error}</div>
@@ -385,6 +370,8 @@ export function AnalyticsPanel({ sessionId, userId }: Props) {
               </div>
             )}
 
+            {mode === "tester" ? (
+              <>
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-lg border border-rose-200 bg-white p-3 shadow-sm">
                 <div className="text-xs text-muted-foreground">Friction score</div>
@@ -439,6 +426,8 @@ export function AnalyticsPanel({ sessionId, userId }: Props) {
                 )}
               </div>
             </div>
+              </>
+            ) : null}
           </div>
         </ScrollArea>
       </div>
