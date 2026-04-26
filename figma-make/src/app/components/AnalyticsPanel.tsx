@@ -22,12 +22,12 @@ type BetaTask = {
   completeIf: (e: LiveEvent) => boolean;
 };
 
-function pickDifferentTaskId(all: string[], current?: string | null) {
+function pickDifferentTaskId(all: string[], current?: string | null): string | null {
   if (all.length === 0) return null;
-  if (all.length === 1) return all[0];
+  if (all.length === 1) return all[0]!;
   let next = current;
-  while (next === current) next = all[Math.floor(Math.random() * all.length)];
-  return next;
+  while (next === current) next = all[Math.floor(Math.random() * all.length)]!;
+  return next ?? null;
 }
 
 export function AnalyticsPanel({ sessionId, userId }: Props) {
@@ -317,16 +317,6 @@ export function AnalyticsPanel({ sessionId, userId }: Props) {
                         : submitStatus === "error"
                           ? "Submit failed"
                           : "Submit session"}
-                  </button>
-                  <button
-                    className="text-xs px-3 py-1.5 rounded border border-rose-200 bg-white hover:bg-rose-50"
-                    onClick={() => {
-                      setTaskId((cur) => pickDifferentTaskId(tasks.map((t) => t.id), cur));
-                      setTaskDone(false);
-                    }}
-                    data-track="session_new_task"
-                  >
-                    New task
                   </button>
                 </div>
               </div>
