@@ -345,7 +345,7 @@ export function AnalyticsPanel({ sessionId, userId }: Props) {
                   </div>
 
                   <div className="rounded-lg border border-rose-200 bg-white p-3">
-                    <div className="text-sm font-semibold mb-2">Top clicked (all submitted)</div>
+                    <div className="text-sm font-semibold mb-2">Top clicked</div>
                     <div className="space-y-1">
                       {(pmOverview?.topClicked ?? []).slice(0, 10).map((t: any) => (
                         <div key={t.element} className="flex items-center justify-between gap-3 text-xs">
